@@ -7,8 +7,6 @@ namespace Utils
 {
     public abstract class Singleton<T> : Singleton where T : MonoBehaviour
     {
-        #region Properties
-
         [NotNull]
         public static T Instance
         {
@@ -47,10 +45,6 @@ namespace Utils
             }
         }
 
-        #endregion
-
-        #region Fields
-
         [CanBeNull] private static T instance;
 
         [NotNull]
@@ -58,10 +52,6 @@ namespace Utils
         private static readonly object Lock = new object();
 
         [SerializeField] private bool persistent = true;
-
-        #endregion
-
-        #region Methods
 
         private void Awake()
         {
@@ -73,25 +63,15 @@ namespace Utils
         protected virtual void OnAwake()
         {
         }
-
-        #endregion
     }
 
     public abstract class Singleton : MonoBehaviour
     {
-        #region Properties
-
         public static bool Quitting { get; private set; }
-
-        #endregion
-
-        #region Methods
 
         private void OnApplicationQuit()
         {
             Quitting = true;
         }
-
-        #endregion
     }
 }

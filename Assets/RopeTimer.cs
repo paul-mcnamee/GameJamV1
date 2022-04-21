@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class RopeTimer : MonoBehaviour
@@ -7,23 +6,49 @@ public class RopeTimer : MonoBehaviour
     public SpriteRenderer Left;
     public SpriteRenderer Right;
     public SpriteRenderer Middle;
+    public TMPro.TMP_Text TimeRemainingText;
+
+    private float elapsedTime;
+    private float updateInterval = 0.1f;
+
+    public float GameDurationSec;
+    private float timeRemainingSec;
+    private float updateIntervalSize;
 
     private void Awake()
     {
-        Vector2 initialMiddleSize = Middle.size;
-        Middle.size = new Vector2(0f, initialMiddleSize.y);
-        Middle.transform.position = new Vector2(Left.transform.position.x, Left.transform.position.y);
+        timeRemainingSec = GameDurationSec;
+        updateIntervalSize = Middle.size.x / ( GameDurationSec / updateInterval );
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Update()
     {
-        
+        elapsedTime += Time.deltaTime;
+        if (elapsedTime >= updateInterval)
+        {
+            timeRemainingSec -= elapsedTime;
+            TimeRemainingText.text = $"Time Remaining: {timeRemainingSec:F0}";
+            UpdatePositions();
+            elapsedTime = 0f;
+            if (timeRemainingSec <= 0)
+            {
+                // Game Over
+                timeRemainingSec = 0f;
+                Left.enabled = false;
+                Right.enabled = false;
+                Middle.enabled = false;
+                GameTimer.Instance.GameOver();
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void UpdatePositions()
     {
-        
+        // Shrink the size of the middle segment by the updateIntervalSize
+        Middle.size = new Vector2 (Mathf.Clamp(Middle.size.x - updateIntervalSize, 0f, float.MaxValue), Middle.size.y);
+
+        // move the middle and the right segments by the amount shrunk
+        Middle.transform.DOMove(new Vector2(Middle.transform.position.x - updateIntervalSize / 4, Middle.transform.position.y), updateInterval);
+        Right.transform.DOMove(new Vector2(Right.transform.position.x - updateIntervalSize/2, Right.transform.position.y), updateInterval);
     }
 }

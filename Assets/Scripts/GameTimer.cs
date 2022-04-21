@@ -25,6 +25,11 @@ public class GameTimer : Singleton<GameTimer>
 
     }
 
+    public void GameOver()
+    {
+        OnGameEnd?.Invoke();
+    }
+
     private void OnEnable()
     {
         OnGameStart?.Invoke();

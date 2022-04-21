@@ -11,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Mask
   - 
   - 
   - 
@@ -38,6 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Particles
+    uniqueID: 972289059
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Mask
+    uniqueID: 1463683563
     locked: 0

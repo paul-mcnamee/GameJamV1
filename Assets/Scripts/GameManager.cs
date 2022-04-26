@@ -4,9 +4,6 @@ using Utils;
 
 public class GameManager : Singleton<GameManager>
 {
-    // TODO: Score
-    // TODO: Player Controls
-
     public Camera Camera => General.MainCamera;
     public GameTimer GameTimer => GameTimer.Instance;
     public ScoreManager ScoreManager => ScoreManager.Instance;

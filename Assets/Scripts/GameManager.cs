@@ -5,11 +5,11 @@ using Utils;
 public class GameManager : Singleton<GameManager>
 {
     // TODO: Score
-    // TODO: GameTimer
     // TODO: Player Controls
 
     public Camera Camera => General.MainCamera;
-    private GameTimer GameTimer => GameTimer.Instance;
+    public GameTimer GameTimer => GameTimer.Instance;
+    public ScoreManager ScoreManager => ScoreManager.Instance;
 
     protected override void OnAwake()
     {
@@ -36,14 +36,12 @@ public class GameManager : Singleton<GameManager>
 
     private void OnGameEnd()
     {
-        // show a score summary
-        throw new NotImplementedException();
+        // TODO: Show a score summary
     }
 
     private void OnGameStart()
     {
-        // Play an animation or something
-        throw new NotImplementedException();
+        // TODO: Play an animation or something
     }
 
     private void OnDisable()

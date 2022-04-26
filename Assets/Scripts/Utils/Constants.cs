@@ -11,6 +11,7 @@ namespace Utils
         #region values
         
         public const float START_TIME = 0f;
+        public const float DEFAULT_MINI_GAME_DURATION_SEC = 5f;
 
         #endregion
 

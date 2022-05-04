@@ -6,9 +6,11 @@ public class flashlightPowerup : MonoBehaviour, Powerup
 {
     public int flashlightDuration = 5;
     private SpriteMask mask;
+    public AudioSource soundEffect;
 
     public  void powerup(GameObject character) 
     {
+        soundEffect.Play();
         gameObject.GetComponent<SpriteRenderer>().enabled = false ;
         gameObject.GetComponent<BoxCollider2D>().enabled = false ;
         mask = character.GetComponentInChildren<SpriteMask>();

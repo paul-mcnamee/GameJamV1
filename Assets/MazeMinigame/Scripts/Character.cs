@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 
 [SelectionBase]
+[RequireComponent(typeof(PlayerInput))]
 public class Character : MonoBehaviour
 {
 
@@ -14,8 +15,10 @@ public class Character : MonoBehaviour
     Rigidbody2D rigidbody;
     public GameObject flashlight;
     public GameObject mask;
+    public InputAction moveAction;
 
-    
+    private Vector2 moveForce = Vector2.zero;
+     
 
     private void Awake()
     {
@@ -32,17 +35,15 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 newPos = Vector2.zero;
-        newPos.x = Input.GetAxisRaw("Horizontal");
-        newPos.y = Input.GetAxisRaw("Vertical");
-        if (!Input.anyKey)
-            animator.enabled = false;
-        else
-            animator.enabled = true;
-
-        rigidbody.AddForce(newPos.normalized*delta, ForceMode2D.Impulse);
         
-        character.transform.rotation = Quaternion.FromToRotation(Vector2.right, newPos);
+        //if (!Input.anyKey)
+        //    animator.enabled = false;
+        //else
+        //    animator.enabled = true;
+
+        rigidbody.AddForce(moveForce.normalized*delta, ForceMode2D.Impulse);
+        
+        character.transform.rotation = Quaternion.FromToRotation(Vector2.right, moveForce);
         
     }
 
@@ -64,6 +65,10 @@ public class Character : MonoBehaviour
 
     }
 
+    private void OnMove(InputValue value)
+    {
+        moveForce = value.Get<Vector2>();
+    }
 
    
 }

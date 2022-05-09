@@ -16,11 +16,11 @@ public class RopeTimer : MonoBehaviour
 
     private float timeRemainingSec;
 
-    private void Awake()
+    private void Start()
     {
+        GameTimer.Instance.OnGameEnd += DisableRope;
         timeRemainingSec = GameTimer.Instance.GameDurationSec;
         Particles.position = particleStartPos;
-        GameTimer.Instance.OnGameEnd += DisableRope;
         Mask.DOSizeDelta(new Vector2(0f, Mask.sizeDelta.y), GameTimer.Instance.GameDurationSec);
         Particles.DOMoveX(particleEndPos.x, GameTimer.Instance.GameDurationSec);
     }

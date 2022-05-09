@@ -9,15 +9,44 @@ public class Rod : MonoBehaviour
     public float angle = 45f;
     public float force = 2f;
     private Vector3 initPos;
+    private IEnumerator hookCoroutine;
+    private GameTimer gameTimer;
 
     private void Awake()
     {
         initPos = hookRb.gameObject.transform.position;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void Start()
     {
-        Debug.Log("you win the game, you got the Fish");
+        gameTimer = GameTimer.Instance;
+        gameTimer.OnGameEnd += StopHook;
+        gameTimer.StartGame();
+        DisableHook();
+    }
+
+    private void OnDestroy()
+    {
+        if (gameTimer != null)
+        {
+            gameTimer.OnGameEnd -= StopHook;
+        }
+    }
+
+    private void StopHook()
+    {
+        if (hookCoroutine != null)
+            StopCoroutine(hookCoroutine);
+        DisableHook();
+    }
+
+    private void DisableHook()
+    {
+        hookRb.gameObject.SetActive(false);
+        hookRb.gameObject.transform.position = initPos;
+        hookRb.velocity = Vector2.zero;
+        hookRb.gameObject.SetActive(true);
+        hookRb.Sleep();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -33,14 +62,14 @@ public class Rod : MonoBehaviour
         {
             // TODO: LOSE!
             Debug.Log("you lose the game, you hit a Bomb");
-            GameTimer.Instance.GameOver();
+            GameTimer.Instance.EndGame();
             return;
         }
         else if (collision.gameObject.TryGetComponent<Seagull>(out var seagull))
         {
             // TODO: LOSE!
             Debug.Log("you lose the game, you hit a Seagull");
-            GameTimer.Instance.GameOver();
+            GameTimer.Instance.EndGame();
             return;
         }
 
@@ -50,7 +79,12 @@ public class Rod : MonoBehaviour
     public void Fire(InputAction.CallbackContext context)
     {
         if (context.performed)
-            StartCoroutine(LaunchHook());
+        {
+            if (GameTimer.Instance.GameIsEnded)
+                return;
+            hookCoroutine = LaunchHook();
+            StartCoroutine(hookCoroutine);
+        }
     }
 
     private IEnumerator LaunchHook()
@@ -61,23 +95,8 @@ public class Rod : MonoBehaviour
         hookRb.AddForce(new Vector2(xcomponent, ycomponent), ForceMode2D.Impulse);
         yield return new WaitForSeconds(2f);
 
-        hookRb.gameObject.SetActive(false);
-        hookRb.gameObject.transform.position = initPos;
-        hookRb.velocity = Vector2.zero;
-        hookRb.gameObject.SetActive(true);
-        hookRb.Sleep();
+        DisableHook();
         yield return null;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

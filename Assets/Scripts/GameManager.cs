@@ -5,8 +5,9 @@ using Utils;
 public class GameManager : Singleton<GameManager>
 {
     public Camera Camera => General.MainCamera;
-    public GameTimer GameTimer => GameTimer.Instance;
-    public ScoreManager ScoreManager => ScoreManager.Instance;
+    [HideInInspector] private GameTimer GameTimer;
+    [HideInInspector] private ScoreManager ScoreManager;
+    [HideInInspector] private MenuManager MenuManager;
 
     protected override void OnAwake()
     {
@@ -16,19 +17,19 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameTimer = GameTimer.Instance;
+
+        GameTimer.OnGameStart += OnGameStart;
+        GameTimer.OnGameEnd += OnGameEnd;
+
+        ScoreManager = ScoreManager.Instance;
+        MenuManager = MenuManager.Instance;
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    private void OnEnable()
-    {
-        GameTimer.OnGameStart += OnGameStart;
-        GameTimer.OnGameEnd += OnGameEnd;
     }
 
     private void OnGameEnd()
@@ -41,10 +42,12 @@ public class GameManager : Singleton<GameManager>
         // TODO: Play an animation or something
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        GameTimer.OnGameStart -= OnGameStart;
-        GameTimer.OnGameEnd -= OnGameEnd;
+        if (GameTimer != null)
+        {
+            GameTimer.OnGameStart -= OnGameStart;
+            GameTimer.OnGameEnd -= OnGameEnd;
+        }
     }
-
 }

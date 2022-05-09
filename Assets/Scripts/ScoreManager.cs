@@ -4,8 +4,8 @@ public class ScoreManager : Singleton<ScoreManager>
 {
     public TMPro.TMP_Text scoreText;
     private string textToUpdate = "";
-    private int score = 0;
-    bool updateTextRequired = false;
+    private int score;
+    public bool UpdateTextRequired = false;
 
     public int Score
     {
@@ -19,21 +19,25 @@ public class ScoreManager : Singleton<ScoreManager>
     {
         score++;
         textToUpdate = $"Score: {score}";
-        updateTextRequired = true;
-        // TODO: check for win conditions??
-
+        UpdateTextRequired = true;
         return Score;
     }
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        scoreText.text = $"Score: {score}";
+        base.OnAwake();
+        score = 0;
     }
 
-    // Update is called once per frame
+    private void Start()
+    {
+        scoreText.text = $"Score: {score}";
+        textToUpdate = scoreText.text;
+    }
+
     void Update()
     {
-        if (updateTextRequired)
+        if (UpdateTextRequired)
             scoreText.text = textToUpdate;
     }
 }

@@ -24,7 +24,7 @@ namespace Utils
                 {
                     if (instance != null)
                         return instance;
-                    var instances = FindObjectsOfType<T>();
+                    var instances = FindObjectsOfType<T>(true);
                     var count = instances.Length;
                     if (count > 0)
                     {
@@ -32,9 +32,9 @@ namespace Utils
                             return instance = instances[0];
                         Debug.LogWarning(
                             $"[{nameof(Singleton)}<{typeof(T)}>] There should never be more than one {nameof(Singleton)} of type {typeof(T)} in the scene, but {count} were found. The first instance found will be used, and all others will be destroyed.");
-                        for (var i = 1; i < instances.Length; i++)
-                            Destroy(instances[i]);
-                        return instance = instances[0];
+                        for (var i = 0; i < instances.Length - 1; i++)
+                            Destroy(instances[i].gameObject);
+                        return instance = instances[instances.Length - 1];
                     }
 
                     Debug.Log(
@@ -55,13 +55,32 @@ namespace Utils
 
         private void Awake()
         {
+            var instances = FindObjectsOfType<T>(true);
+            var count = instances.Length;
+            if (count > 1)
+            {
+                Debug.LogWarning(
+                $"[{nameof(Singleton)}<{typeof(T)}>] There should never be more than one {nameof(Singleton)} of type {typeof(T)} in the scene, but {count} were found. The first instance found will be used, and all others will be destroyed.");
+
+                if (instance != this)
+                {
+                    DestroyImmediate(this.gameObject);
+                    return;
+                }
+            }
+
+            if (count == 1)
+                instance = instances[0];
+
             if (persistent)
                 DontDestroyOnLoad(gameObject);
+
             OnAwake();
         }
 
         protected virtual void OnAwake()
         {
+            
         }
     }
 

@@ -8,6 +8,8 @@ public class SeagullMover : MonoBehaviour
     private Queue<Seagull> Seagulls;
     public float SeagullMovingSpeedFactor = 1f;
     public float BaseSeagullMoveTime = 3f;
+    private IEnumerator moveSeagullCoroutine;
+    private GameTimer gameTimer;
 
     private void Awake()
     {
@@ -19,7 +21,15 @@ public class SeagullMover : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(MoveSeagull());
+        gameTimer = GameTimer.Instance; ;
+        gameTimer.OnGameEnd += DisableGulls;
+        moveSeagullCoroutine = MoveSeagull();
+        StartCoroutine(moveSeagullCoroutine);
+    }
+
+    private void DisableGulls()
+    {
+        StopCoroutine(moveSeagullCoroutine);
     }
 
     private IEnumerator MoveSeagull()
@@ -38,5 +48,13 @@ public class SeagullMover : MonoBehaviour
         gullToMove.gameObject.transform.position = initPos;
         Seagulls.Enqueue(gullToMove);
         yield return MoveSeagull();
+    }
+
+    private void OnDestroy()
+    {
+        if (gameTimer != null)
+        {
+            gameTimer.OnGameEnd -= DisableGulls;
+        }
     }
 }

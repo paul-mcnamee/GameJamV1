@@ -9,21 +9,39 @@ public class PowerGauge : MonoBehaviour
     public float animationTimeSec = 0.5f;
     private float initialHeight;
     public float CurrentPowerPercentage { get { return Mask.sizeDelta.y / initialHeight; } }
+    private IEnumerator moveGagueCoroutine;
+    private GameTimer gameTimer;
 
     private void Awake()
     {
         initialHeight = Mask.sizeDelta.y;
     }
 
-    public void SetHeightPercentage(float percent)
-    {
-        Mask.DOSizeDelta(new Vector2(Mask.sizeDelta.x, initialHeight * percent), animationTimeSec);
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(MoveContinuously());
+        gameTimer = GameTimer.Instance;
+        gameTimer.OnGameEnd += StopGague;
+        moveGagueCoroutine = MoveContinuously();
+        StartCoroutine(moveGagueCoroutine);
+    }
+
+    private void OnDestroy()
+    {
+        if (gameTimer != null)
+        {
+            gameTimer.OnGameEnd -= StopGague;
+        }
+    }
+
+    private void StopGague()
+    {
+        StopCoroutine(moveGagueCoroutine);
+    }
+
+    public void SetHeightPercentage(float percent)
+    {
+        Mask.DOSizeDelta(new Vector2(Mask.sizeDelta.x, initialHeight * percent), animationTimeSec);
     }
 
     private IEnumerator MoveContinuously()

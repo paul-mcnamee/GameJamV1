@@ -1,7 +1,7 @@
 using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PowerGauge : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class PowerGauge : MonoBehaviour
     private void Awake()
     {
         initialHeight = Mask.sizeDelta.y;
+        Mask.DOSizeDelta(new Vector2(Mask.sizeDelta.x, 0f), 0f);
     }
 
     // Start is called before the first frame update
@@ -22,8 +23,7 @@ public class PowerGauge : MonoBehaviour
     {
         gameTimer = GameTimer.Instance;
         gameTimer.OnGameEnd += StopGague;
-        moveGagueCoroutine = MoveContinuously();
-        StartCoroutine(moveGagueCoroutine);
+        moveGagueCoroutine = MoveOnce();
     }
 
     private void OnDestroy()
@@ -31,6 +31,24 @@ public class PowerGauge : MonoBehaviour
         if (gameTimer != null)
         {
             gameTimer.OnGameEnd -= StopGague;
+        }
+    }
+
+    public void Fire(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (GameTimer.Instance.GameIsEnded)
+                return;
+
+            StartCoroutine(moveGagueCoroutine);
+        }
+
+        if (context.canceled)
+        {
+            Mask.DOKill();
+            StopCoroutine(moveGagueCoroutine);
+            moveGagueCoroutine = MoveOnce();
         }
     }
 
@@ -42,6 +60,14 @@ public class PowerGauge : MonoBehaviour
     public void SetHeightPercentage(float percent)
     {
         Mask.DOSizeDelta(new Vector2(Mask.sizeDelta.x, initialHeight * percent), animationTimeSec);
+    }
+
+    private IEnumerator MoveOnce()
+    {
+        Mask.DOSizeDelta(new Vector2(Mask.sizeDelta.x, initialHeight * 0f), 0f);
+
+        SetHeightPercentage(1f);
+        yield return null;
     }
 
     private IEnumerator MoveContinuously()

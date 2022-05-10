@@ -78,7 +78,8 @@ public class Rod : MonoBehaviour
 
     public void Fire(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        //Launch the hook when the button is let go
+        if (context.canceled)
         {
             if (GameTimer.Instance.GameIsEnded)
                 return;

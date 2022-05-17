@@ -5,6 +5,27 @@ using UnityEngine;
 public class MazeGenerator : MonoBehaviour
 {
     private GameObject[,] maze;
+    public GameObject[] powerups;
+
+    public static int width = 20;
+    public static int height = 20;
+    public int weight = 2;
+
+    public GameObject wall;
+
+    //# --------------------------------------------------------------------
+    //# 2. Set up constants to aid with describing the passage directions
+    //# --------------------------------------------------------------------
+
+    const int N = 1;
+    const int S = 2;
+    const int E = 4;
+    const int W = 8;
+    //# --------------------------------------------------------------------
+    //# 3. Data structures to assist the algorithm
+    //# --------------------------------------------------------------------
+
+    int[,] grid = new int[height, width];
 
     // Start is called before the first frame update
     void Start()
@@ -30,8 +51,24 @@ public class MazeGenerator : MonoBehaviour
         {
             for (int j = 0; j < width; j++)
             {
-                Destroy(maze[i*3+1,j*3+1]);
+                bool powerupPlaced = false;
+                Destroy(maze[i * 3 + 1, j * 3 + 1]);
                 //maze[i*3,j*3].GetComponent<Renderer>().material.color = Color.red;
+                foreach (var pu in powerups)
+                {
+                    if (!powerupPlaced)
+                    {
+                        if (Random.Range(0, 100) < pu.GetComponent<Powerup>().getSpawnRate())
+                        {
+                            var obj = Instantiate(pu,
+                        new Vector2((i *3+1)* wall.GetComponent<Renderer>().bounds.size.x, (j *3+1)* wall.GetComponent<Renderer>().bounds.size.y),
+                        Quaternion.identity);
+                            obj.transform.parent = transform;
+                            powerupPlaced = true;
+                        }
+                    }
+                }
+                
                 if ((grid[i, j] & N) == N)
                     Destroy(maze[i * 3 , j * 3 + 1]);
                 if ((grid[i, j] & S) == S)
@@ -65,25 +102,7 @@ public class MazeGenerator : MonoBehaviour
     //# 1. Allow the maze to be customized via command-line parameters
     //# --------------------------------------------------------------------
 
-    public static int width = 10;
-    public static int height = 30;
-    public int weight = 2;
-    
-    public GameObject wall;
-
-    //# --------------------------------------------------------------------
-    //# 2. Set up constants to aid with describing the passage directions
-    //# --------------------------------------------------------------------
-
-    const int N = 1;
-    const int S = 2;
-    const int E = 4;
-    const int W = 8;
-    //# --------------------------------------------------------------------
-    //# 3. Data structures to assist the algorithm
-    //# --------------------------------------------------------------------
-
-    int[,] grid = new int[height, width];
+   
 
     //# --------------------------------------------------------------------
     //# 4. A simple routine to emit the maze as ASCII

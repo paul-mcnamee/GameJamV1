@@ -7,6 +7,7 @@ public class flashlightPowerup : MonoBehaviour, Powerup
     public int flashlightDuration = 5;
     private SpriteMask mask;
     public AudioSource soundEffect;
+    public int spawnRate = 10;
 
     public  void powerup(GameObject character) 
     {
@@ -37,6 +38,11 @@ public class flashlightPowerup : MonoBehaviour, Powerup
         yield return new WaitForSeconds(flashlightDuration);
         mask.transform.localScale = mask.transform.localScale / 2;
 
+    }
+
+    public int getSpawnRate()
+    {
+        return spawnRate;
     }
 }
 

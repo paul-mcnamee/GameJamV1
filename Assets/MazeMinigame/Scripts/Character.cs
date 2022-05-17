@@ -18,7 +18,7 @@ public class Character : MonoBehaviour
     public InputAction moveAction;
 
     private Vector2 moveForce = Vector2.zero;
-     
+    public float speedModifier = 1;
 
     private void Awake()
     {
@@ -40,8 +40,9 @@ public class Character : MonoBehaviour
         //    animator.enabled = false;
         //else
         //    animator.enabled = true;
+        
 
-        rigidbody.AddForce(moveForce.normalized*delta, ForceMode2D.Impulse);
+        rigidbody.AddForce(moveForce.normalized*delta*speedModifier, ForceMode2D.Impulse);
         
         character.transform.rotation = Quaternion.FromToRotation(Vector2.right, moveForce);
         
@@ -62,12 +63,17 @@ public class Character : MonoBehaviour
             Debug.Log("powerup triggered");
             collision.gameObject.GetComponent<Powerup>().powerup(gameObject);
         }
+        else
+        {
+           // speedModifier = 1;
+        }
 
     }
 
     private void OnMove(InputValue value)
     {
-        moveForce = value.Get<Vector2>();
+        if(value.Get<Vector2>().magnitude>0)
+            moveForce = value.Get<Vector2>();
     }
 
    

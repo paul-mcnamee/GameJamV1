@@ -7,4 +7,6 @@ public interface Powerup
     
     public abstract void powerup(GameObject character);
 
+    public abstract int getSpawnRate();
+
 }

@@ -216,6 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1826670209934439006}
   - component: {fileID: 1826670209934439005}
+  - component: {fileID: 1774792652670397953}
   m_Layer: 5
   m_Name: PowerGauge
   m_TagString: Untagged
@@ -259,6 +260,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mask: {fileID: 1826670209997303365}
   animationTimeSec: 0.2
+--- !u!210 &1774792652670397953
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826670209934439007}
+  m_Enabled: 1
+  m_SortingLayerID: -444837027
+  m_SortingLayer: 1
+  m_SortingOrder: 0
 --- !u!1 &1826670209997303366
 GameObject:
   m_ObjectHideFlags: 0

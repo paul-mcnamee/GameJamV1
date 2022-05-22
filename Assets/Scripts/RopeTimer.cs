@@ -10,6 +10,7 @@ public class RopeTimer : MonoBehaviour
     public Vector3 particleStartPos;
     public Vector3 particleEndPos;
     public Transform Particles;
+    public Transform FireAnimation;
 
     private float elapsedTime;
     private float updateInterval = 0.02f;
@@ -21,8 +22,10 @@ public class RopeTimer : MonoBehaviour
         GameTimer.Instance.OnGameEnd += DisableRope;
         timeRemainingSec = GameTimer.Instance.GameDurationSec;
         Particles.position = particleStartPos;
+        FireAnimation.position = particleStartPos;
         Mask.DOSizeDelta(new Vector2(0f, Mask.sizeDelta.y), GameTimer.Instance.GameDurationSec);
         Particles.DOMoveX(particleEndPos.x, GameTimer.Instance.GameDurationSec);
+        FireAnimation.DOMoveX(particleEndPos.x, GameTimer.Instance.GameDurationSec);
     }
 
     private void Update()

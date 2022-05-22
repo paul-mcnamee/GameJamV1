@@ -38,6 +38,36 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackgroundBack
+    uniqueID: 4096937543
+    locked: 0
+  - name: BackgroundMid
+    uniqueID: 1311365285
+    locked: 0
+  - name: BackgroundFront
+    uniqueID: 1703107559
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: GameGraphics
+    uniqueID: 3850130269
+    locked: 0
+  - name: GameGraphicsOverlay
+    uniqueID: 1037504555
+    locked: 0
+  - name: GameCollisions
+    uniqueID: 2880422201
+    locked: 0
+  - name: GameText
+    uniqueID: 2505052553
+    locked: 0
+  - name: UIGraphics
+    uniqueID: 1107737417
+    locked: 0
+  - name: UIGraphicsOverlay
+    uniqueID: 1772772629
+    locked: 0
+  - name: UIText
+    uniqueID: 486591525
     locked: 0
